@@ -1,6 +1,6 @@
 {
   "name": "graphbook",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Full Stack React Facebook clone from Packt \"Full-Stack Web Development with GraphQL and React - Second Edition\"",
   "main": "index.js",
   "scripts": {
