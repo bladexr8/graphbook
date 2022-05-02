@@ -1,9 +1,17 @@
 import express from 'express';
 import path from 'path';
+import 'dotenv/config'
+
+// db models and connection
+import db from './database';
+const utils = {
+  db,
+};
 
 // make our GraphQL server publicly accessible to our clients, 
 // we are going to bind the Apollo Server to the /graphql path
-import services from './services';
+import servicesLoader from './services';
+const services = servicesLoader(utils);
 
 // middleware
 import helmet from 'helmet';
@@ -68,4 +76,8 @@ for (let i = 0; i < serviceNames.length; i += 1) {
   }
 }
 
-app.listen(8000, () => console.log('Listening on port 8000...'));
+app.listen(8000, () => {
+  //console.log(db)
+  console.log(`NODE_ENV = ${process.env.NODE_ENV}...`)
+  console.log('Listening on port 8000...')
+});
