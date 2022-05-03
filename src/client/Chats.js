@@ -1,6 +1,20 @@
 import React, { useState } from 'react';
+import { gql, useQuery } from '@apollo/client';
+const GET_CHATS = gql`{
+  chats {
+    id
+    users {
+      id
+      avatar
+      username
+    }
+    lastMessage {
+      text
+    }
+  }
+}`;
 
-const chats = [
+/*const chats = [
             {
                 "id": 1,
                 "lastMessage": {
@@ -16,7 +30,7 @@ const chats = [
                         "username": "TestUser2"
                     }
                 ]
-            }]
+            }]*/
 
 const usernamesToString = (users)  => {
   const userList = users.slice(1);
@@ -36,6 +50,12 @@ const shorten = (text) => {
   return text;
 }
 const Chats = () => {
+
+  const { loading, error, data} = useQuery(GET_CHATS);
+  if (loading) return <div className="chats"><p>Loading...</p></div>;
+  if (error) return <div className="chats"><p>{error.message}</p></div>;
+  const { chats } = data;
+
   return (
     <div className="chats">
       {chats.map((chat, i) =>
