@@ -33,7 +33,9 @@ const Feed = () => {
   const [postContent, setPostContent] = useState('');
 
   // GraphQL Mutation to add a Post
-  const [addPost] = useMutation(ADD_POST);
+  const [addPost] = useMutation(ADD_POST, {
+    refetchQueries: [{query: GET_POSTS}]
+  });
 
   // query Posts using GraphQL
   const { loading, error, data } = useQuery(GET_POSTS);
