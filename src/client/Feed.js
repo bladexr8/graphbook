@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { gql, useQuery } from '@apollo/client';
-import { selectionSetMatchesResult } from '@apollo/client/cache/inmemory/helpers';
+import { gql, useQuery, useMutation } from '@apollo/client';
+
 
 const GET_POSTS = gql`{ 
   posts { 
@@ -13,11 +13,27 @@ const GET_POSTS = gql`{
   }
 }`;
 
+const ADD_POST = gql`
+  mutation addPost($post : PostInput!) {
+    addPost(post : $post) {
+      id
+      text
+      user {
+        username
+        avatar
+      }
+    }
+  }
+`;
+
 // Main Application Component
 const Feed = () => {
   // set initial state
   //const [posts, setPosts] = useState('');
   const [postContent, setPostContent] = useState('');
+
+  // GraphQL Mutation to add a Post
+  const [addPost] = useMutation(ADD_POST);
 
   // query Posts using GraphQL
   const { loading, error, data } = useQuery(GET_POSTS);
@@ -25,18 +41,15 @@ const Feed = () => {
   // form handler
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('handleSubmit...');
-    const newPost = {
-      id: posts.length + 1,
-      text: postContent,
-      user: {
-        avatar: '/uploads/avatar1.png',
-        username: 'Fake User'
+    addPost({
+      variables: {
+        post: {
+          text: postContent
+        }
       }
-    };
-    console.log(newPost);
+    });
     // update state
-    setPosts([newPost, ...posts]);
+    //setPosts([newPost, ...posts]);
     setPostContent('');
   }
 
