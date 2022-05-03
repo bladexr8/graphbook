@@ -34,7 +34,14 @@ const Feed = () => {
 
   // GraphQL Mutation to add a Post
   const [addPost] = useMutation(ADD_POST, {
-    refetchQueries: [{query: GET_POSTS}]
+    update(cache, { data: { addPost } }) {
+      // get data from cache for this query
+      const data = cache.readQuery({ query: GET_POSTS });
+      // add new post to cache
+      const newData = { posts: [addPost, ...posts]};
+      // update the cache
+      cache.writeQuery({ query: GET_POSTS, data: newData });
+    }
   });
 
   // query Posts using GraphQL
