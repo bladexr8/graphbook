@@ -1,29 +1,26 @@
 import React, { useState } from 'react';
+import { gql, useQuery } from '@apollo/client';
+import { selectionSetMatchesResult } from '@apollo/client/cache/inmemory/helpers';
 
-const initialPosts = [
-      {
-        id: 2,
-        text: 'Lorem ipsum',
-          user: {
-            avatar: '/uploads/avatar1.png',
-            username: 'Test User'
-          }
-      },
-      {
-        id: 1,
-        text: 'Lorem ipsum',
-        user: {
-          avatar: '/uploads/avatar2.png',
-          username: 'Test User 2'
-        }
-      }
-];
+const GET_POSTS = gql`{ 
+  posts { 
+    id
+    text
+    user {
+      avatar
+      username
+    }
+  }
+}`;
 
 // Main Application Component
 const Feed = () => {
   // set initial state
-  const [posts, setPosts] = useState(initialPosts);
+  //const [posts, setPosts] = useState('');
   const [postContent, setPostContent] = useState('');
+
+  // query Posts using GraphQL
+  const { loading, error, data } = useQuery(GET_POSTS);
 
   // form handler
   const handleSubmit = (event) => {
@@ -42,6 +39,13 @@ const Feed = () => {
     setPosts([newPost, ...posts]);
     setPostContent('');
   }
+
+  // Loading Posts...
+  if (loading) return 'Loading...';
+  if (error) return 'Error! ${error.message}';
+
+  // once posts loaded
+  const { posts } = data;
 
   return (
     <div className="container">
