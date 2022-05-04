@@ -24,6 +24,9 @@ const typeDefinitions = `
     text: String
     user: User
   }
+  type PostFeed {
+    posts: [Post]
+  }
   type User {
     id: Int
     avatar: String
@@ -45,6 +48,7 @@ const typeDefinitions = `
     posts: [Post]
     chats: [Chat]
     chat(chatId: Int): Chat
+    postsFeed(page: Int, limit: Int): PostFeed
   }
   input PostInput {
     text: String!

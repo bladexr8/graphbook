@@ -74,6 +74,22 @@ export default function resolver() {
         logger.log({ level: 'info', message: 'Querying Database for all Posts...' });
           return Post.findAll({order: [['createdAt', 'DESC']]});
       },
+      postsFeed(root, { page, limit }, context) {
+        var skip = 0;
+        if(page && limit) {
+          skip = page * limit;
+        }
+        var query = {
+          order: [['createdAt', 'DESC']],
+          offset: skip,
+        };
+        if(limit) {
+          query.limit = limit;
+        }
+        return {
+         posts: Post.findAll(query)
+        };
+      },
       chats(root, args, context) {
         return User.findAll().then((users) => {
           if (!users.length) {
